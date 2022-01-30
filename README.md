@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
@@ -40,3 +41,7 @@ Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_
 ```shell
 npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
 ```
+=======
+# GodOfWarBattle_onChain
+A NFT based game in a PvC fashion. Will be deployed on testnet soon.
+>>>>>>> 69ed17b7ecf6d688175cb2558490ce1e66183b30
