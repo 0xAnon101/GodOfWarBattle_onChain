@@ -27,9 +27,12 @@ const main = async () => {
   console.log(`MyEpicGame contract deployed to:  ${myEpicGame.address}`);
 
   const index = randomInteger(1, 5);
-
   const txn = await myEpicGame.mintCharacterNFT(index);
   await txn.wait();
+
+  // Get the value of the NFT's URI.
+  const returnedTokenUri = await myEpicGame.tokenURI(1);
+  console.log("Token URI:", returnedTokenUri);
 };
 
 function randomInteger(min, max) {
