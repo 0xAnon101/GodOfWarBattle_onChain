@@ -12,18 +12,30 @@ contract GodOfWarBattle is ERC721 {
         uint32 maxHp;
         uint32 characterIndex;
         uint32 attackDamage;
+        uint32 superAttackDamage;
+        uint32 defense;
         string name;
         string imageURI;
     }
+
+    struct BigBoss {
+        uint32 hp;
+        uint32 maxHp;
+        uint32 attackDamage;
+        string name;
+        string imageURI;
+    }
+
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIds;
 
     // relates the nftholder with the tokenId they own
     mapping(address => uint256) public nftHolders;
     // relates tokenId with the character attributes
     mapping(uint256 => CharacterAttributes) public nftHoldersAttributes;
 
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
     CharacterAttributes[] defaultCharacters;
+    BigBoss public bigBoss;
 
     event NewRareNFTMinted(address indexed owner, uint256 indexed tokenIndex);
 
@@ -32,20 +44,37 @@ contract GodOfWarBattle is ERC721 {
         string[] memory _names,
         string[] memory _imageURI,
         uint32[] memory _hp,
-        uint32[] memory _attackDamage
+        uint32[] memory _attackDamage,
+        uint32[] memory _superAttackDamage,
+        uint32[] memory _defense,
+        string memory bossName,
+        string memory bossImageURI,
+        uint32 bossHp,
+        uint32 bossAttackDamage
     ) ERC721("GodOfWarBattle", "GODB") {
+        bigBoss = BigBoss({
+            hp: bossHp,
+            maxHp: bossHp,
+            attackDamage: bossAttackDamage,
+            name: bossName,
+            imageURI: bossImageURI
+        });
+        console.log("BigBoss Initialized");
+
         for (uint32 i = 0; i < _names.length; i++) {
             defaultCharacters.push(
                 CharacterAttributes({
                     characterIndex: i,
                     attackDamage: _attackDamage[i],
+                    superAttackDamage: _superAttackDamage[i],
+                    defense: _defense[i],
                     name: _names[i],
                     imageURI: _imageURI[i],
                     hp: _hp[i],
                     maxHp: _hp[i]
                 })
             );
-            console.log("defaultCharacters Initialized");
+            console.log("defaultCharacters Initialized: ", _names[i]);
         }
         _tokenIds.increment();
     }
@@ -58,6 +87,9 @@ contract GodOfWarBattle is ERC721 {
         nftHoldersAttributes[newItemId] = CharacterAttributes({
             characterIndex: _characterIndex,
             attackDamage: defaultCharacters[_characterIndex].attackDamage,
+            superAttackDamage: defaultCharacters[_characterIndex]
+                .superAttackDamage,
+            defense: defaultCharacters[_characterIndex].defense,
             name: defaultCharacters[_characterIndex].name,
             imageURI: defaultCharacters[_characterIndex].imageURI,
             hp: defaultCharacters[_characterIndex].hp,
@@ -77,6 +109,27 @@ contract GodOfWarBattle is ERC721 {
         _tokenIds.increment();
     }
 
+    function attackBoss() public view {
+        require(bigBoss.hp > 0, "Big boss hp is below zero!");
+        // fetch the character NFT attributes
+        CharacterAttributes storage player = nftHoldersAttributes[
+            nftHolders[msg.sender]
+        ];
+        require(player.hp > 0, "Character HP is less than or equal to zero!");
+        console.log(
+            "\nPlayer w/ character %s about to attack. Has %s HP and %s AD",
+            player.name,
+            player.hp,
+            player.attackDamage
+        );
+        console.log(
+            "Boss %s has %s HP and %s AD",
+            bigBoss.name,
+            bigBoss.hp,
+            bigBoss.attackDamage
+        );
+    }
+
     function tokenURI(uint256 _tokenId)
         public
         view
@@ -89,6 +142,10 @@ contract GodOfWarBattle is ERC721 {
         string memory strAttackDamage = Strings.toString(
             cAttributes.attackDamage
         );
+        string memory strSuperAttackDamage = Strings.toString(
+            cAttributes.superAttackDamage
+        );
+        string memory strDefense = Strings.toString(cAttributes.defense);
 
         string memory json = Base64.encode(
             abi.encodePacked(
@@ -104,6 +161,10 @@ contract GodOfWarBattle is ERC721 {
                 strMaxHp,
                 '}, { "trait_type": "Attack Damage", "value": ',
                 strAttackDamage,
+                '}, { "trait_type": "Attack Damage", "value": ',
+                strSuperAttackDamage,
+                '}, { "trait_type": "Attack Damage", "value": ',
+                strDefense,
                 "} ]}"
             )
         );
