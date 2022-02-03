@@ -37,7 +37,12 @@ contract GodOfWarBattle is ERC721 {
     CharacterAttributes[] defaultCharacters;
     BigBoss public bigBoss;
 
-    event NewRareNFTMinted(address indexed owner, uint256 indexed tokenIndex);
+    event CharacterNFTMinted(
+        address sender,
+        uint256 tokenId,
+        uint256 characterIndex
+    );
+    event AttackComplete(uint256 newBossHp, uint256 newPlayerHp);
 
     // Initialize the contract with default character attributes and NFT name
     constructor(
@@ -97,7 +102,7 @@ contract GodOfWarBattle is ERC721 {
         });
         // assigning the caller it's minted newItemId
         nftHolders[msg.sender] = newItemId;
-        emit NewRareNFTMinted(msg.sender, newItemId);
+        emit CharacterNFTMinted(msg.sender, newItemId, _characterIndex);
 
         console.log(
             "Minted NFT w/ tokenId %s and characterIndex %s",
@@ -109,12 +114,39 @@ contract GodOfWarBattle is ERC721 {
         _tokenIds.increment();
     }
 
-    function attackBoss() public view {
+    function checkIfUserHasNFT()
+        public
+        view
+        returns (CharacterAttributes memory)
+    {
+        uint256 userNftTokenId = nftHolders[msg.sender];
+        if (userNftTokenId > 0) {
+            return nftHoldersAttributes[userNftTokenId];
+        } else {
+            CharacterAttributes memory emptyData;
+            return emptyData;
+        }
+    }
+
+    function getAllDefaultCharacters()
+        public
+        view
+        returns (CharacterAttributes[] memory)
+    {
+        return defaultCharacters;
+    }
+
+    function getBoss() public view returns (BigBoss memory) {
+        return bigBoss;
+    }
+
+    function attackBoss() public {
         require(bigBoss.hp > 0, "Big boss hp is below zero!");
         // fetch the character NFT attributes
         CharacterAttributes storage player = nftHoldersAttributes[
             nftHolders[msg.sender]
         ];
+
         require(player.hp > 0, "Character HP is less than or equal to zero!");
         console.log(
             "\nPlayer w/ character %s about to attack. Has %s HP and %s AD",
@@ -128,6 +160,26 @@ contract GodOfWarBattle is ERC721 {
             bigBoss.hp,
             bigBoss.attackDamage
         );
+
+        // reduce the bigBoss hp when player makes a damage
+        if (bigBoss.hp < player.attackDamage) {
+            bigBoss.hp = 0;
+            console.log("you have successfully defeated the boss");
+        } else {
+            bigBoss.hp -= player.attackDamage;
+        }
+
+        // reduce the player hp when bigBoss makes a damage
+        if (player.hp < bigBoss.attackDamage) {
+            player.hp = 0;
+            console.log("Boss actually killed you. You can't revive now!");
+        } else {
+            player.hp = player.hp - bigBoss.attackDamage;
+        }
+
+        console.log("Player attacked boss. New boss hp: %s", bigBoss.hp);
+        console.log("Boss attacked player. New player hp: %s\n", player.hp);
+        emit AttackComplete(bigBoss.hp, player.hp);
     }
 
     function tokenURI(uint256 _tokenId)
@@ -161,9 +213,9 @@ contract GodOfWarBattle is ERC721 {
                 strMaxHp,
                 '}, { "trait_type": "Attack Damage", "value": ',
                 strAttackDamage,
-                '}, { "trait_type": "Attack Damage", "value": ',
+                '}, { "trait_type": "Super Attack Damage", "value": ',
                 strSuperAttackDamage,
-                '}, { "trait_type": "Attack Damage", "value": ',
+                '}, { "trait_type": "Defense", "value": ',
                 strDefense,
                 "} ]}"
             )

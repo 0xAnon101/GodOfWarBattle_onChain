@@ -72,6 +72,13 @@ const main = async () => {
   await txn.wait();
   console.log("Minted NFT #6");
 
+  // caller attacking boss
+  // txn = await myEpicGame.attackBoss();
+  // await txn.wait();
+
+  // txn = await myEpicGame.attackBoss();
+  // await txn.wait();
+
   // Get the value of the NFT's URI.
   const returnedTokenUri = await myEpicGame.tokenURI(1);
   console.log("Token URI:", returnedTokenUri);
