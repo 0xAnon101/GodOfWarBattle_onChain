@@ -79,9 +79,13 @@ contract GodOfWarBattle is ERC721 {
                     maxHp: _hp[i]
                 })
             );
-            console.log("defaultCharacters Initialized: ", _names[i]);
+            console.log("defaultCharacters Initialized: ");
         }
         _tokenIds.increment();
+    }
+
+    function setBigBossURI(string memory uri) {
+        bigBoss.imageURI = uri;
     }
 
     function mintCharacterNFT(uint32 _characterIndex) external {

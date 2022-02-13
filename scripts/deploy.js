@@ -40,7 +40,7 @@ const main = async () => {
     CHARDATA_SUPERDMG,
     CHARDATA_DEFENSE,
     "Dragon Pepe", // boss name
-    "https://bafybeiarybsu5yljlnvzgr36iokr2hhz3dldiaqvmdtu6wwrvu6bthtymy.ipfs.dweb.link/", // boss URI
+    "ipfs://QmdjYrErW31RzFMxz3nVhiRwHisAq71A51bBgc4dprfJdr", // boss URI
     "5000", // boss HP value
     "50" // boss attack damage value
   );
@@ -48,29 +48,29 @@ const main = async () => {
   await myEpicGame.deployed();
   console.log(`MyEpicGame contract deployed to:  ${myEpicGame.address}`);
 
-  let txn = await myEpicGame.mintCharacterNFT(0);
-  await txn.wait();
-  console.log("Minted NFT #1");
+  // let txn = await myEpicGame.mintCharacterNFT(0);
+  // await txn.wait();
+  // console.log("Minted NFT #1");
 
-  txn = await myEpicGame.mintCharacterNFT(1);
-  await txn.wait();
-  console.log("Minted NFT #2");
+  // txn = await myEpicGame.mintCharacterNFT(1);
+  // await txn.wait();
+  // console.log("Minted NFT #2");
 
-  txn = await myEpicGame.mintCharacterNFT(2);
-  await txn.wait();
-  console.log("Minted NFT #3");
+  // txn = await myEpicGame.mintCharacterNFT(2);
+  // await txn.wait();
+  // console.log("Minted NFT #3");
 
-  txn = await myEpicGame.mintCharacterNFT(3);
-  await txn.wait();
-  console.log("Minted NFT #4");
+  // txn = await myEpicGame.mintCharacterNFT(3);
+  // await txn.wait();
+  // console.log("Minted NFT #4");
 
-  txn = await myEpicGame.mintCharacterNFT(4);
-  await txn.wait();
-  console.log("Minted NFT #5");
+  // txn = await myEpicGame.mintCharacterNFT(4);
+  // await txn.wait();
+  // console.log("Minted NFT #5");
 
-  txn = await myEpicGame.mintCharacterNFT(5);
-  await txn.wait();
-  console.log("Minted NFT #6");
+  // txn = await myEpicGame.mintCharacterNFT(5);
+  // await txn.wait();
+  // console.log("Minted NFT #6");
 
   // caller attacking boss
   // txn = await myEpicGame.attackBoss();
