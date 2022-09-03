@@ -20,7 +20,7 @@ module.exports = [
   [90 + 30, 100 + 30, 60 + 30, 100 + 30, 90 + 30, 150 + 30],
   [10, 15, 5, 17, 13, 20],
   "Dragon Pepe", // boss name
-  "https://bafybeiarybsu5yljlnvzgr36iokr2hhz3dldiaqvmdtu6wwrvu6bthtymy.ipfs.dweb.link/", // boss URI
+  "ipfs://QmdjYrErW31RzFMxz3nVhiRwHisAq71A51bBgc4dprfJdr", // boss URI
   "5000", // boss HP value
   "50", // boss attack damage value
 ];

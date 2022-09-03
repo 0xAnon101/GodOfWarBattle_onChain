@@ -84,7 +84,7 @@ contract GodOfWarBattle is ERC721 {
         _tokenIds.increment();
     }
 
-    function setBigBossURI(string memory uri) {
+    function setBigBossURI(string calldata uri) external {
         bigBoss.imageURI = uri;
     }
 
